@@ -12,7 +12,7 @@ The EFI bundles third-party bootloader, driver and kernel-extension binaries. Ea
 | VirtualSMC / SMCProcessor / SMCSuperIO | 1.3.7 | [Acidanthera/VirtualSMC](https://github.com/acidanthera/VirtualSMC) |
 | RestrictEvents | 1.1.6 | [Acidanthera/RestrictEvents](https://github.com/acidanthera/RestrictEvents) |
 | BlueToolFixup | 2.7.2 | [Acidanthera/BrcmPatchRAM](https://github.com/acidanthera/BrcmPatchRAM) |
-| IntelBluetoothFirmware / IntelBTPatcher | 2.5.0 | [OpenIntelWireless/IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware) |
+| IntelBluetoothFirmware / IntelBTPatcher | 2.5.0 development binaries; IntelBTPatcher is pre-Tahoe | [OpenIntelWireless/IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware) |
 | itlwm | 2.3.0 | [OpenIntelWireless/itlwm](https://github.com/OpenIntelWireless/itlwm) |
 | USBToolBox | 1.2.0 | [USBToolBox/kext](https://github.com/USBToolBox/kext) |
 | UTBMap | 1.1 custom map | Generated for this machine with USBToolBox |
@@ -22,3 +22,5 @@ The EFI bundles third-party bootloader, driver and kernel-extension binaries. Ea
 The `EFI/oc/Drivers` directory also contains OpenRuntime, OpenCanopy and ResetNvramEntry from OpenCorePkg.
 
 No Wi-Fi credentials are stored in the EFI. HeliPort is installed separately and is not bundled here.
+
+The displayed 2.5.0 version does not mean that the bundled IntelBTPatcher contains Tahoe support. Binary inspection found a maximum kernel value of 24 (Sequoia). No replacement Bluetooth binaries are included in this repository update; see [Future Bluetooth and Continuity work](docs/FUTURE-BLUETOOTH-AND-CONTINUITY.md).

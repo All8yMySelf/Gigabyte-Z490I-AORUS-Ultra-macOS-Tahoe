@@ -4,6 +4,8 @@ A tested OpenCore EFI and troubleshooting record for macOS Tahoe on the Gigabyte
 
 This configuration currently boots three monitors, provides accelerated AMD graphics, Intel I225-V Ethernet, Intel Wi-Fi through HeliPort, HDMI/DisplayPort audio, USB peripherals and short sleep/wake. The two important Tahoe fixes were AppleIGC 1.7 for Ethernet and a custom WhateverGreen 1.7.2 build from upstream PR #127 for AMD multi-monitor startup.
 
+As of 8 August 2026, the owner reports that the documented day-to-day functions are continuing to work. Bluetooth and native Apple Continuity features remain future goals; no experimental Bluetooth fix is included in this repository.
+
 > [!CAUTION]
 > This is a hardware-specific reference, not a universal EFI. The included `config.plist` has deliberately blank/zeroed SMBIOS identity fields. Generate your own values before booting it. Keep a known-working recovery USB and a backup of your existing EFI.
 
@@ -43,11 +45,14 @@ This configuration currently boots three monitors, provides accelerated AMD grap
 
 - Intel Bluetooth is not working on this Tahoe build. The USB device enumerates and firmware loads, but macOS does not obtain a usable controller address. Use the Magic Trackpad by USB for now.
 - HeliPort Wi-Fi is not native Apple Wi-Fi. macOS System Settings may show its normal Wi-Fi switch as off even while HeliPort is connected.
+- With the current `itlwm.kext`/HeliPort Wi-Fi stack, AirDrop, Handoff, Universal Clipboard, Continuity Camera, Instant Hotspot and Apple Watch unlock should not be expected. Restoring ordinary Bluetooth would not add the missing native Wi-Fi/AWDL path.
 - Only one all-three-monitors-connected startup has been recorded so far. Longer observation is sensible because the original display failure was intermittent.
 - After the successful sleep/wake test, previously playing media audio resumed before the account password was entered. Pause private media before sleep if that matters to you.
-- Onboard analogue audio, AirDrop, Handoff, Continuity, DRM playback and long-duration sleep have not been fully validated.
+- Onboard analogue audio, DRM playback and long-duration sleep have not been fully validated.
 - The WhateverGreen build is from an open, unmerged pull request. It is not an official Acidanthera release.
 - The tested config uses a custom SIP configuration and has OpenCore `SecureBootModel` disabled. Review those security choices for your own needs.
+
+See [Future Bluetooth and Continuity work](docs/FUTURE-BLUETOOTH-AND-CONTINUITY.md) for the completed research, candidate diagnostic test, safety warnings and possible Broadcom hardware route. Treat that document as a future-work record, not an instruction to modify a stable installation.
 
 ## The problems this solved
 
@@ -111,6 +116,7 @@ Do not transplant this folder if your board, CPU generation, GPU, network contro
 - `README-FIRST.txt` — the required identity and recovery warning.
 - `docs/TESTING.md` — test history and observed results.
 - `docs/TROUBLESHOOTING.md` — symptoms, rejected experiments and recovery advice.
+- `docs/FUTURE-BLUETOOTH-AND-CONTINUITY.md` — evidence, limitations and a gated plan for possible future work.
 - `docs/BUILD-PROVENANCE.md` — custom WhateverGreen build provenance.
 - `THIRD_PARTY.md` — bundled component versions and upstream projects.
 
