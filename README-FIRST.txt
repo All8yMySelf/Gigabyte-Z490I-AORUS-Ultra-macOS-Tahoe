@@ -19,3 +19,7 @@ Keep a separate known-working recovery USB and back up your existing EFI first.
 
 Bluetooth is not currently working. Wi-Fi requires HeliPort. WhateverGreen 1.7.2
 is a custom build from open PR #127, not an official Acidanthera release.
+
+Do not substitute Bluetooth kexts from this package based only on their displayed
+2.5.0 version. The bundled IntelBTPatcher is a pre-Tahoe development binary. Read
+docs/FUTURE-BLUETOOTH-AND-CONTINUITY.md before considering any future test.

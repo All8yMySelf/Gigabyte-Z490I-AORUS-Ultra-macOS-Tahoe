@@ -52,6 +52,10 @@ The Intel Bluetooth USB device is visible and its firmware kexts load, but Tahoe
 
 Current workaround: connect the Magic Trackpad by USB. Do not assume that changing the USB map will repair the Tahoe Bluetooth software/firmware compatibility problem.
 
+Later source and binary research found that the published EFI's IntelBTPatcher 2.5.0 development binary declares Sequoia, not Tahoe, as its maximum supported kernel. A Tahoe-aware fork is therefore a plausible future diagnostic candidate, but it has not been installed or tested on this machine and its kernel-level BLE hooks have unresolved stability concerns. Do not treat it as a proven daily-use fix.
+
+The conservative next action is read-only: compare the live Intel Bluetooth executable hashes and Mach-O UUIDs with the public package. If a controlled test is eventually approved, change only IntelBluetoothFirmware and IntelBTPatcher on a separate test EFI and leave BlueToolFixup, the USB map, NVRAM, kext order and Wi-Fi configuration unchanged. Full details are in [Future Bluetooth and Continuity work](FUTURE-BLUETOOTH-AND-CONTINUITY.md).
+
 ## Slow or apparently frozen desktop after login
 
 OneDrive, Photos and Spotlight performed heavy initial scanning during early Tahoe boots. The menu bar and applications could take several minutes to settle even though memory was healthy. Pause large sync/indexing jobs while diagnosing boot stability.
