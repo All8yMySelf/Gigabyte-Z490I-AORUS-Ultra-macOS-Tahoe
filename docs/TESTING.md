@@ -69,10 +69,12 @@ An early login problem where characters appeared to delete themselves was traced
 ## Still not working or not fully tested
 
 - Intel AX201 Bluetooth.
-- Native Apple Wi-Fi features such as AirDrop/Handoff/Continuity.
+- Native Apple Wi-Fi features such as AirDrop/Handoff/Continuity are unavailable with the current `itlwm`/HeliPort stack; this is a known capability limitation rather than an outstanding test.
 - Long-duration/repeated sleep.
 - DRM edge cases.
 - More than one cold/startup test with all three monitors attached.
+
+On 8 August 2026 the owner reported that everything else currently used was continuing to work. No Bluetooth candidate kext or Continuity hardware change had been applied. See [Future Bluetooth and Continuity work](FUTURE-BLUETOOTH-AND-CONTINUITY.md).
 
 ## Confidence level
 
