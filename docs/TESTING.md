@@ -1,5 +1,7 @@
 # Test record
 
+> **26 August 2026 update:** A networking kernel panic was reported only after a long sleep. The assertion included `m->m_flags & M_PKTHDR` in the input path. AppleIGC 1.7 has therefore been disabled and AppleIntelI210Ethernet 2.3.1 with `e1000=0` is staged as the new controlled test. The configuration passes `plutil` and OpenCore 1.0.7 `ocvalidate`, but it has not yet been rebooted or long-sleep tested. See [the dated Ethernet test record](ETHERNET-I225-LONG-SLEEP-TEST-2026-08-26.md).
+
 Test date: 6 August 2026, Australia/Adelaide.
 
 Tested on macOS Tahoe 26.6 build 25G72 with OpenCore 1.0.7, Lilu 1.7.2, AppleIGC 1.7 and the custom WhateverGreen 1.7.2 build described in [BUILD-PROVENANCE.md](BUILD-PROVENANCE.md).
@@ -79,3 +81,5 @@ On 8 August 2026 the owner reported that everything else currently used was cont
 ## Confidence level
 
 Ethernet and two-monitor startup have repeat testing. Triple-monitor startup and short sleep/wake each have one successful controlled confirmation. Keep the recovery EFI until the system has accumulated normal daily use and additional cold boots.
+
+The Ethernet confidence statement above applies to the historical AppleIGC 1.7 baseline. The current AppleIntelI210Ethernet test has configuration-validation evidence only and must not be described as boot-proven until the next controlled startup and cable test succeed.

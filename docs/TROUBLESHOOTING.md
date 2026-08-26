@@ -38,13 +38,25 @@ If a black screen returns:
 - AppleIGC 1.5 development build: produced a panic in `AppleIGC::outputStart`.
 - Native Tahoe `AppleEthernetE1000` DriverKit attachment on this machine: cable insertion reproducibly froze the system.
 
-### Working combination
+### Previous known-good combination
 
 - AppleIGC 1.7 enabled.
 - `DisableIoMapper = true`.
 - `DisableIoMapperMapping = false`.
 
 Do not transplant another board's DMAR table. If changing the network driver, disconnect Ethernet until the loaded driver is positively identified.
+
+### Current long-sleep test (configured 26 August 2026)
+
+After a Tahoe 26.6 panic following a long sleep, with the `m->m_flags & M_PKTHDR` assertion in the networking input path, the EFI was changed to one non-conflicting driver route:
+
+- AppleIGC 1.7 file retained, config entry disabled.
+- AppleIntelI210Ethernet 2.3.1 enabled with `MinKernel = 22.0.0`.
+- `e1000=0` added to `boot-args`.
+- `DisableIoMapper = true` retained and `DisableIoMapperMapping = true` enabled.
+- No `SSDT-I225V`, kernel patch or injected `device-id` added. The Apple kext directly lists `pci8086,15f3`, which matches this controller.
+
+This configuration passed `plutil` and OpenCore 1.0.7 `ocvalidate` before installation. It was not rebooted as part of the change workflow and remains an unproven long-sleep test. Restore `Copy Working 2026-08-26` if it does not boot or Ethernet fails.
 
 ## Bluetooth controller unavailable
 

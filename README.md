@@ -2,9 +2,9 @@
 
 A tested OpenCore EFI and troubleshooting record for macOS Tahoe on the Gigabyte Z490I AORUS Ultra, Intel Core i7-10700K and AMD Radeon RX 6600 XT.
 
-This configuration currently boots three monitors, provides accelerated AMD graphics, Intel I225-V Ethernet, Intel Wi-Fi through HeliPort, HDMI/DisplayPort audio, USB peripherals and short sleep/wake. The two important Tahoe fixes were AppleIGC 1.7 for Ethernet and a custom WhateverGreen 1.7.2 build from upstream PR #127 for AMD multi-monitor startup.
+This configuration boots three monitors and provides accelerated AMD graphics, Intel Wi-Fi through HeliPort, HDMI/DisplayPort audio, USB peripherals and short sleep/wake. AppleIGC 1.7 was the tested Intel I225-V Ethernet solution, but a long-sleep Tahoe panic reported on 26 August 2026 prompted a controlled switch to Apple's AppleIntelI210Ethernet 2.3.1 route. The new Ethernet route is configured but has not yet been reboot-tested.
 
-As of 8 August 2026, the owner reports that the documented day-to-day functions are continuing to work. Bluetooth and native Apple Continuity features remain future goals; no experimental Bluetooth fix is included in this repository.
+As of 26 August 2026, Bluetooth and native Apple Continuity features remain future goals; no experimental Bluetooth fix is included in this repository. See the [I225 long-sleep Ethernet test record](docs/ETHERNET-I225-LONG-SLEEP-TEST-2026-08-26.md) before using or evaluating the current network configuration.
 
 > [!CAUTION]
 > This is a hardware-specific reference, not a universal EFI. The included `config.plist` has deliberately blank/zeroed SMBIOS identity fields. Generate your own values before booting it. Keep a known-working recovery USB and a backup of your existing EFI.
@@ -35,8 +35,8 @@ As of 8 August 2026, the owner reports that the documented day-to-day functions 
 - Two monitors attached before startup: two consecutive successful tests.
 - Three simultaneous monitors: hot-plug and one all-connected startup test passed.
 - LG HDMI audio and the other display-audio paths.
-- Intel I225-V Ethernet through AppleIGC 1.7 at a negotiated 1 Gb/s, full duplex with flow control.
-- Ethernet hot-plug, DHCP, IPv4/IPv6, sustained traffic and cable-connected startup.
+- Historical baseline: Intel I225-V Ethernet through AppleIGC 1.7 at a negotiated 1 Gb/s, full duplex with flow control.
+- Historical baseline: Ethernet hot-plug, DHCP, IPv4/IPv6, sustained traffic and cable-connected startup.
 - Intel Wi-Fi through `itlwm.kext` 2.3.0 and HeliPort.
 - USB keyboard, mouse, microphone, hub and wired Magic Trackpad.
 - Short sleep/wake test of more than three minutes.
@@ -49,6 +49,7 @@ As of 8 August 2026, the owner reports that the documented day-to-day functions 
 - Only one all-three-monitors-connected startup has been recorded so far. Longer observation is sensible because the original display failure was intermittent.
 - After the successful sleep/wake test, previously playing media audio resumed before the account password was entered. Pause private media before sleep if that matters to you.
 - Onboard analogue audio, DRM playback and long-duration sleep have not been fully validated.
+- The current AppleIntelI210Ethernet 2.3.1 / `e1000=0` Ethernet configuration is pending its first boot and long-sleep validation. AppleIGC 1.7 remains bundled but disabled for rollback.
 - The WhateverGreen build is from an open, unmerged pull request. It is not an official Acidanthera release.
 - The tested config uses a custom SIP configuration and has OpenCore `SecureBootModel` disabled. Review those security choices for your own needs.
 
@@ -60,12 +61,14 @@ See [Future Bluetooth and Continuity work](docs/FUTURE-BLUETOOTH-AND-CONTINUITY.
 
 An old AppleIGC 1.5 development build produced a kernel panic in `AppleIGC::outputStart`. Disabling AppleIGC allowed Tahoe's native `AppleEthernetE1000` DriverKit driver to attach, but inserting the cable then reproducibly froze the computer. A hard power-off could also leave an unrelated APFS panic report on the next boot, which initially made the failure look like storage corruption.
 
-**Working change:** install and enable official AppleIGC 1.7. Keep these tested kernel quirks:
+**Previously tested change:** install and enable official AppleIGC 1.7. The successful short-sleep baseline used these kernel quirks:
 
 - `DisableIoMapper = true`
 - `DisableIoMapperMapping = false`
 
 Do not copy a DMAR table from another motherboard. AppleIGC 1.8 was deliberately not used during this work because a Tahoe I225-V panic report was open at the time of testing.
+
+On 26 August 2026, the machine reported a Tahoe networking panic after a long sleep, with the `m->m_flags & M_PKTHDR` assertion in the receive/input path. The active test configuration now disables AppleIGC, enables AppleIntelI210Ethernet 2.3.1, adds `e1000=0`, and sets `DisableIoMapperMapping = true`. The real I225-V identity `pci8086,15f3` is already matched by the Apple kext, so no fake device property or `SSDT-I225V` was added. This is a controlled test, not yet a proven replacement; see the dated Ethernet record.
 
 ### 2. Two displays went black after verbose boot
 
@@ -84,7 +87,7 @@ This produced two successful two-monitor startups, three-monitor hot-plug and an
 
 ## Network results
 
-Apple's `networkQuality` was run sequentially and forced to each interface using HTTP/1.1 while all three displays remained active:
+Before the long-sleep panic, Apple's `networkQuality` was run sequentially against the AppleIGC baseline and forced to each interface using HTTP/1.1 while all three displays remained active:
 
 | Interface | Download | Upload | Base latency |
 |---|---:|---:|---:|
@@ -118,6 +121,7 @@ Do not transplant this folder if your board, CPU generation, GPU, network contro
 - `docs/TROUBLESHOOTING.md` — symptoms, rejected experiments and recovery advice.
 - `docs/FUTURE-BLUETOOTH-AND-CONTINUITY.md` — evidence, limitations and a gated plan for possible future work.
 - `docs/BUILD-PROVENANCE.md` — custom WhateverGreen build provenance.
+- `docs/ETHERNET-I225-LONG-SLEEP-TEST-2026-08-26.md` — panic, backup, exact config change, validation and rollback record.
 - `THIRD_PARTY.md` — bundled component versions and upstream projects.
 
 ## Important security note
